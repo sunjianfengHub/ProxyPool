@@ -17,7 +17,7 @@ SELECT * FROM `mmzztt_all_page_note` WHERE get_count = %s LIMIT 1
 """
 
 UPDATE_HAND_GET = """
-UPDATE mmzztt_all_page_note set get_count = %s WHERE id = 26
+UPDATE mmzztt_all_page_note set get_count = 1 WHERE id = %s
 """
 
 def get_conn():
@@ -111,8 +111,9 @@ def get_mmzztt_page():
 @app.route('/registerEntryOnce', methods=["POST"])
 def update_register_ertry_once():
     conn = get_mysql_conn()
-    id = request.body.id
-    tag = request.body.tag
+    print(request.json)
+    id = request.json.get('id')
+    tag = request.json.get('tag')
     if tag == H_TAG:
         print(id)
         try:
