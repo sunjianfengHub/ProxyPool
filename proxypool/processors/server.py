@@ -16,6 +16,9 @@ SELECT_ONCE_ADDR = """
 SELECT * FROM `mmzztt_all_page_note` WHERE get_count = %s LIMIT 1
 """
 
+UPDATE_HAND_GET = """
+UPDATE mmzztt_all_page_note set get_count = %s WHERE id = 26
+"""
 
 def get_conn():
     """
@@ -114,7 +117,7 @@ def update_register_ertry_once():
         print(id)
         try:
             with conn.cursor() as cursor:
-                get_once = cursor.execute(SELECT_ONCE_ADDR, 0)
+                update = cursor.execute(UPDATE_HAND_GET, id)
         except pymysql.MySQLError as err:
             print("数据库嗝屁了！～")
             print(err)
