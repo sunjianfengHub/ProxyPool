@@ -3,7 +3,6 @@ from os.path import dirname, abspath, join
 from environs import Env
 from loguru import logger
 
-
 env = Env()
 env.read_env()
 
@@ -16,12 +15,11 @@ LOG_DIR = join(ROOT_DIR, env.str('LOG_DIR', 'logs'))
 
 # definition of environments
 DEV_MODE, TEST_MODE, PROD_MODE = 'dev', 'test', 'prod'
-APP_ENV = env.str('APP_ENV', DEV_MODE).lower()
+APP_ENV = env.str('APP_ENV', PROD_MODE).lower()
 APP_DEBUG = env.bool('APP_DEBUG', True if APP_ENV == DEV_MODE else False)
 APP_DEV = IS_DEV = APP_ENV == DEV_MODE
 APP_PROD = IS_PROD = APP_ENV == PROD_MODE
 APP_TEST = IS_TEST = APP_ENV == TEST_MODE
-
 
 # Which WSGI container is used to run applications
 # - gevent: pip install gevent
@@ -34,12 +32,12 @@ APP_PROD_METHOD = env.str('APP_PROD_METHOD', APP_PROD_METHOD_GEVENT).lower()
 
 # redis host
 REDIS_HOST = env.str('PROXYPOOL_REDIS_HOST',
-                     env.str('REDIS_HOST', '127.0.0.1'))
+                     env.str('REDIS_HOST', '81.70.149.97'))
 # redis port
-REDIS_PORT = env.int('PROXYPOOL_REDIS_PORT', env.int('REDIS_PORT', 6379))
+REDIS_PORT = env.int('PROXYPOOL_REDIS_PORT', env.int('REDIS_PORT', 4379))
 # redis password, if no password, set it to None
 REDIS_PASSWORD = env.str('PROXYPOOL_REDIS_PASSWORD',
-                         env.str('REDIS_PASSWORD', None))
+                         env.str('REDIS_PASSWORD', '17683...sjf...558..'))
 # redis db, if no choice, set it to 0
 REDIS_DB = env.int('PROXYPOOL_REDIS_DB', env.int('REDIS_DB', 0))
 # redis connection string, like redis://[password]@host:port or rediss://[password]@host:port/0,
@@ -53,8 +51,10 @@ REDIS_KEY = env.str('PROXYPOOL_REDIS_KEY', env.str(
 
 # definition of proxy scores
 PROXY_SCORE_MAX = 100
-PROXY_SCORE_MIN = 0
-PROXY_SCORE_INIT = 10
+# 小于80就del
+PROXY_SCORE_MIN = 80
+# 基础分数为90
+PROXY_SCORE_INIT = 90
 
 # definition of proxy number
 PROXY_NUMBER_MAX = 50000
@@ -80,18 +80,16 @@ TEST_VALID_STATUS = env.list('TEST_VALID_STATUS', [200, 206, 302])
 # definition of api
 API_HOST = env.str('API_HOST', '0.0.0.0')
 API_PORT = env.int('API_PORT', 5555)
-API_THREADED = env.bool('API_THREADED', True)
+API_THREADED = env.bool('API_THREADED', False)
 
 # flags of enable
 ENABLE_TESTER = env.bool('ENABLE_TESTER', True)
 ENABLE_GETTER = env.bool('ENABLE_GETTER', True)
 ENABLE_SERVER = env.bool('ENABLE_SERVER', True)
 
-
 ENABLE_LOG_FILE = env.bool('ENABLE_LOG_FILE', True)
 ENABLE_LOG_RUNTIME_FILE = env.bool('ENABLE_LOG_RUNTIME_FILE', True)
 ENABLE_LOG_ERROR_FILE = env.bool('ENABLE_LOG_ERROR_FILE', True)
-
 
 LOG_LEVEL_MAP = {
     DEV_MODE: "DEBUG",
