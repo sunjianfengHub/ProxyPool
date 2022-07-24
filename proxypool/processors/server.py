@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, g, request, jsonify
 from proxypool.storages.redis import RedisClient
 from proxypool.setting import API_HOST, API_PORT, API_THREADED, IS_DEV
@@ -111,11 +113,11 @@ def get_mmzztt_page():
 @app.route('/registerEntryOnce', methods=["POST"])
 def update_register_ertry_once():
     conn = get_mysql_conn()
-    print(request.json)
-    id = request.json.get('id')
-    tag = request.json.get('tag')
+    data = request.get_data()
+    data = json.loads(data)
+    id = data['id']
+    tag = data['tag']
     if tag == H_TAG:
-        print(id)
         try:
             with conn.cursor() as cursor:
                 update = cursor.execute(UPDATE_HAND_GET, id)
